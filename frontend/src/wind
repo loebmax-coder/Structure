@@ -1,0 +1,16 @@
+export function getWindPressure(
+  basicWindSpeedMph: number
+): number {
+  return (
+    0.00256 *
+    basicWindSpeedMph *
+    basicWindSpeedMph
+  );
+}
+
+export function getStoryWindForce(
+  pressurePsf: number,
+  tributaryArea: number
+): number {
+  return pressurePsf * tributaryArea;
+}
