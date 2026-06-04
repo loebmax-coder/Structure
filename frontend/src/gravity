@@ -1,0 +1,28 @@
+import { Floor } from '../models/Floor';
+
+export function getFloorArea(
+  floor: Floor
+): number {
+  return floor.width * floor.depth;
+}
+
+export function getFloorGravityLoad(
+  floor: Floor
+): number {
+  const area = getFloorArea(floor);
+
+  return (
+    area *
+    (floor.deadLoadPsf + floor.liveLoadPsf)
+  );
+}
+
+export function getTotalGravityLoad(
+  floors: Floor[]
+): number {
+  return floors.reduce(
+    (sum, floor) =>
+      sum + getFloorGravityLoad(floor),
+    0
+  );
+}
