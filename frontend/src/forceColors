@@ -1,0 +1,35 @@
+export function getForceColor(
+  force: number,
+  maxForce = 500
+): string {
+  const normalized = Math.max(
+    -1,
+    Math.min(1, force / maxForce)
+  );
+
+  if (normalized < 0) {
+    const t = Math.abs(normalized);
+
+    const r = 255;
+    const g = Math.round(
+      255 - t * 255
+    );
+    const b = Math.round(
+      255 - t * 255
+    );
+
+    return `rgb(${r},${g},${b})`;
+  }
+
+  const t = normalized;
+
+  const r = Math.round(
+    255 - t * 255
+  );
+  const g = Math.round(
+    255 - t * 255
+  );
+  const b = 255;
+
+  return `rgb(${r},${g},${b})`;
+}
