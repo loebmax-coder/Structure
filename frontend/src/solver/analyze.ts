@@ -1,28 +1,65 @@
 export interface AnalysisResult {
-  cost: number;
+  heightFt: number;
+  costMillion: number;
   durationMonths: number;
   windMph: number;
+  gravityLoadKips: number;
+  maxMemberForce: number;
+  utilization: number;
   score: number;
   driftRatio: string;
   pass: boolean;
 }
 
-export function analyzeStructure(memberCount = 6, heightFt = 600): AnalysisResult {
+export function analyzeStructure(
+  memberCount = 6,
+  heightFt = 600
+): AnalysisResult {
+
   const windMph = 115;
 
-  const cost = memberCount * 0.75; // $M
-  const durationMonths = 12 + memberCount;
+  const gravityLoadKips = heightFt * 2.5;
 
-  const score = Number(
-    ((heightFt * heightFt) / (cost * 100000)).toFixed(2)
-  );
+  const maxMemberForce =
+    gravityLoadKips / Math.max(memberCount * 0.75, 1);
+
+  const utilization =
+    Math.min(0.98, maxMemberForce / 400);
+
+  const costMillion =
+    Number(
+      (
+        memberCount * 0.18 +
+        heightFt * 0.002
+      ).toFixed(2)
+    );
+
+  const durationMonths =
+    Math.round(
+      10 +
+      heightFt / 80 +
+      memberCount / 2
+    );
+
+  const score =
+    Math.round(
+      (heightFt * 100) /
+      (costMillion * 10)
+    );
+
+  const pass =
+    utilization < 0.90;
 
   return {
-    cost,
+    heightFt,
+    costMillion,
     durationMonths,
     windMph,
+    gravityLoadKips,
+    maxMemberForce,
+    utilization,
     score,
-    driftRatio: "H/480",
-    pass: true
+    driftRatio: pass ? "H/500" : "H/250",
+    pass
   };
 }
