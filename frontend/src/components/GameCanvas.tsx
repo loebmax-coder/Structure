@@ -4,13 +4,38 @@
 
     <h3>Analysis</h3>
 
-    <p>Wind: {results.windMph} mph</p>
-    <p>Cost: ${results.cost.toFixed(2)}M</p>
-    <p>Schedule: {results.durationMonths} mo</p>
-    <p>Drift: {results.driftRatio}</p>
+    <p>Height: {results.heightFt} ft</p>
+
+    <p>
+      Cost: ${results.costMillion.toFixed(2)}M
+    </p>
+
+    <p>
+      Schedule: {results.durationMonths} months
+    </p>
+
+    <p>
+      Wind: {results.windMph} mph
+    </p>
+
+    <p>
+      Gravity Load: {results.gravityLoadKips.toFixed(0)} k
+    </p>
+
+    <p>
+      Max Force: {results.maxMemberForce.toFixed(0)} k
+    </p>
+
+    <p>
+      Utilization: {(results.utilization * 100).toFixed(0)}%
+    </p>
+
+    <p>
+      Drift: {results.driftRatio}
+    </p>
 
     <h2>
-      Score: {results.score}
+      Efficiency Score: {results.score}
     </h2>
   </>
 )}
