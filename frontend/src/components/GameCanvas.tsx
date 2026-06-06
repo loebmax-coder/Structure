@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import type { Node, Member } from '../types';
 
 export default function GameCanvas() {
@@ -55,26 +55,12 @@ export default function GameCanvas() {
           if (!start || !end) return null;
 
           return (
-            <line
-              key={member.id}
-              x1={start.x}
-              y1={start.y}
-              x2={end.x}
-              y2={end.y}
-              stroke="white"
-              strokeWidth={3}
-            />
+            <line key={member.id} x1={start.x} y1={start.y} x2={end.x} y2={end.y} stroke="white" strokeWidth={3} />
           );
         })}
 
         {nodes.map((node) => (
-          <circle
-            key={node.id}
-            cx={node.x}
-            cy={node.y}
-            r={6}
-            fill="#60a5fa"
-          />
+          <circle key={node.id} cx={node.x} cy={node.y} r={6} fill="#60a5fa" />
         ))}
       </svg>
     </div>
