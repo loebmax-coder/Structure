@@ -1,3 +1,4 @@
+import React from 'react';
 import GameCanvas from './components/GameCanvas';
 
 function App() {
