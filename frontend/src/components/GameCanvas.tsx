@@ -1,124 +1,65 @@
-import React, { useState } from 'react';
-import type { Node, Member } from '../types';
-import { analyzeStructure } from '../solver/analyze';
+export interface AnalysisResult {
+  heightFt: number;
+  costMillion: number;
+  durationMonths: number;
+  windMph: number;
+  gravityLoadKips: number;
+  maxMemberForce: number;
+  utilization: number;
+  score: number;
+  driftRatio: string;
+  pass: boolean;
+}
 
-export default function GameCanvas() {
-  const [nodes, setNodes] = useState<Node[]>([]);
-  const [members, setMembers] = useState<Member[]>([]);
-  const [analysisStatus, setAnalysisStatus] = useState<'pass' | 'fail' | null>(null);
-  const [results, setResults] = useState<any>(null);
+export function analyzeStructure(
+  memberCount = 6,
+  heightFt = 600
+): AnalysisResult {
 
-  const loadTestTower = () => {
-    setNodes([
-      { id: 1, x: 200, y: 500 },
-      { id: 2, x: 300, y: 500 },
-      { id: 3, x: 200, y: 350 },
-      { id: 4, x: 300, y: 350 },
-      { id: 5, x: 250, y: 200 }
-    ]);
+  const windMph = 115;
 
-    setMembers([
-      { id: 1, startNodeId: 1, endNodeId: 2, size: 'medium' },
-      { id: 2, startNodeId: 1, endNodeId: 3, size: 'medium' },
-      { id: 3, startNodeId: 2, endNodeId: 4, size: 'medium' },
-      { id: 4, startNodeId: 3, endNodeId: 4, size: 'medium' },
-      { id: 5, startNodeId: 3, endNodeId: 5, size: 'medium' },
-      { id: 6, startNodeId: 4, endNodeId: 5, size: 'medium' }
-    ]);
-  };
+  const gravityLoadKips = heightFt * 2.5;
 
-  const analyze = () => {
-    const result = analyzeStructure(members.length, 600);
+  const maxMemberForce =
+    gravityLoadKips / Math.max(memberCount * 0.75, 1);
 
-    setResults(result);
+  const utilization =
+    Math.min(0.98, maxMemberForce / 400);
 
-    setAnalysisStatus(
-      result.pass ? 'pass' : 'fail'
+  const costMillion =
+    Number(
+      (
+        memberCount * 0.18 +
+        heightFt * 0.002
+      ).toFixed(2)
     );
+
+  const durationMonths =
+    Math.round(
+      10 +
+      heightFt / 80 +
+      memberCount / 2
+    );
+
+  const score =
+    Math.round(
+      (heightFt * 100) /
+      (costMillion * 10)
+    );
+
+  const pass =
+    utilization < 0.90;
+
+  return {
+    heightFt,
+    costMillion,
+    durationMonths,
+    windMph,
+    gravityLoadKips,
+    maxMemberForce,
+    utilization,
+    score,
+    driftRatio: pass ? "H/500" : "H/250",
+    pass
   };
-
-  return (
-    <div style={{ display: 'flex', height: '100vh' }}>
-      <div style={{ width: 280, padding: 16, background: '#111827', color: 'white' }}>
-        <h1>Structure</h1>
-
-        <button onClick={loadTestTower}>
-          Load Test Tower
-        </button>
-
-        <br />
-        <br />
-
-        <button onClick={analyze}>
-          Analyze
-        </button>
-
-        <p>Nodes: {nodes.length}</p>
-        <p>Members: {members.length}</p>
-
-        {analysisStatus && (
-          <h2 style={{ color: analysisStatus === 'pass' ? 'lime' : 'red' }}>
-            {analysisStatus.toUpperCase()}
-          </h2>
-        )}
-
-        {results && (
-          <>
-            <hr />
-
-            <h3>Analysis</h3>
-
-            <p>Cost: ${results.cost.toFixed(2)}M</p>
-
-            <p>
-              Schedule: {results.durationMonths} months
-            </p>
-
-            <p>
-              Wind: {results.windMph} mph
-            </p>
-
-            <p>
-              Drift: {results.driftRatio}
-            </p>
-
-            <h2>
-              Efficiency Score: {results.score}
-            </h2>
-          </>
-        )}
-      </div>
-
-      <svg width="100%" height="100%" style={{ background: '#0f172a' }}>
-        {members.map((member) => {
-          const start = nodes.find(n => n.id === member.startNodeId);
-          const end = nodes.find(n => n.id === member.endNodeId);
-
-          if (!start || !end) return null;
-
-          return (
-            <line
-              key={member.id}
-              x1={start.x}
-              y1={start.y}
-              x2={end.x}
-              y2={end.y}
-              stroke="white"
-              strokeWidth={3}
-            />
-          );
-        })}
-
-        {nodes.map((node) => (
-          <circle
-            key={node.id}
-            cx={node.x}
-            cy={node.y}
-            r={6}
-            fill="#60a5fa"
-          />
-        ))}
-      </svg>
-    </div>
-  );
 }
