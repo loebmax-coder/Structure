@@ -6,6 +6,8 @@ export default function GameCanvas() {
   const [members, setMembers] = useState<Member[]>([]);
   const [analysisStatus, setAnalysisStatus] = useState<'pass' | 'fail' | null>(null);
 
+  const hasStructure = nodes.length > 0;
+
   const loadTestTower = () => {
     setNodes([
       { id: 1, x: 200, y: 500 },
@@ -95,50 +97,61 @@ export default function GameCanvas() {
           background: '#0f172a'
         }}
       >
-        {/* Roof Load */}
+        {!hasStructure && (
+          <text
+            x="45%"
+            y="50%"
+            fill="#64748b"
+            fontSize="28"
+          >
+            Load a structure to begin
+          </text>
+        )}
 
-        <line
-          x1="250"
-          y1="120"
-          x2="250"
-          y2="180"
-          stroke="red"
-          strokeWidth="4"
-        />
+        {hasStructure && (
+          <>
+            <line
+              x1="250"
+              y1="120"
+              x2="250"
+              y2="180"
+              stroke="red"
+              strokeWidth="4"
+            />
 
-        <polygon
-          points="240,170 260,170 250,190"
-          fill="red"
-        />
+            <polygon
+              points="240,170 260,170 250,190"
+              fill="red"
+            />
 
-        <text
-          x="270"
-          y="160"
-          fill="red"
-          fontSize="18"
-        >
-          500 k
-        </text>
+            <text
+              x="270"
+              y="160"
+              fill="red"
+              fontSize="18"
+            >
+              500 k
+            </text>
 
-        {/* Reactions */}
+            <line
+              x1="200"
+              y1="540"
+              x2="200"
+              y2="500"
+              stroke="lime"
+              strokeWidth="4"
+            />
 
-        <line
-          x1="200"
-          y1="540"
-          x2="200"
-          y2="500"
-          stroke="lime"
-          strokeWidth="4"
-        />
-
-        <line
-          x1="300"
-          y1="540"
-          x2="300"
-          y2="500"
-          stroke="lime"
-          strokeWidth="4"
-        />
+            <line
+              x1="300"
+              y1="540"
+              x2="300"
+              y2="500"
+              stroke="lime"
+              strokeWidth="4"
+            />
+          </>
+        )}
 
         {members.map((member) => {
           const start = nodes.find(
