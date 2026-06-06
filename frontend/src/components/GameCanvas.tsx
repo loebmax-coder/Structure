@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import type { Node, Member } from '../types';
+import { analyzeStructure } from '../solver/analyze';
 
 export default function GameCanvas() {
   const [nodes, setNodes] = useState<Node[]>([]);
   const [members, setMembers] = useState<Member[]>([]);
   const [analysisStatus, setAnalysisStatus] = useState<'pass' | 'fail' | null>(null);
+  const [results, setResults] = useState<any>(null);
 
   const loadTestTower = () => {
     setNodes([
